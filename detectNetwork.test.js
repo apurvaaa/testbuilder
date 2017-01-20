@@ -1,16 +1,9 @@
 
-describe('Introduction to Mocha Tests - READ ME FIRST', function() {
+/* describe('Introduction to Mocha Tests - READ ME FIRST', function() {
   // A Mocha test is just a function!
   // If the function throws an error when run, it fails.
   // If it doesn't throw an error when run, it doesn't fail. 
   // To read more about mocha, visit mochajs.org
-
-  // Once you've read and understood this section, please comment it out. 
-  // You will not be able to proceed with a failing test. 
-
-  //it('Throws an error so it fails', function() {
-  //  throw new Error('Delete me!');
-  //});
 
   it('Doesn\'t throw an error, so it doesn\'t fail', function() {
     // This test doesn't really test anything at all! It will pass no matter what.
@@ -20,8 +13,6 @@ describe('Introduction to Mocha Tests - READ ME FIRST', function() {
     return even(10) === true;
   });
 
-  // In tests, we want to compare the expected behavior to the actual behavior.
-  // A test should only fail if the expected behavior doesn't match the actual.
   it('Throws an error when expected behavior does not match actual behavior', function() {
     var even = function(num){
       return num % 2 === 0;
@@ -31,19 +22,17 @@ describe('Introduction to Mocha Tests - READ ME FIRST', function() {
       throw new Error('10 should be even!');
     } 
   });
-});
+}); */
 
 describe('Diner\'s Club', function() {
   var card_number_seed = ['38186782345634', '39206782345634'];
-  var length = 14;
 
   for (var prefix = 38; prefix < 40; prefix++ ) {
-    var card_num = card_number_seed[(prefix % 2)];
-
-
-    it('has a prefix of '+ prefix +' and a length of '+ length, function() {
-      detectNetwork(card_num).should.equal('Diner\'s Club');
-    });
+    (function(prefix, card_num) {
+      it('has a prefix of '+ prefix +' and a length of 14', function() {
+        detectNetwork(card_num).should.equal('Diner\'s Club');
+      });
+    })(prefix, card_number_seed[(prefix % 2)]);
   }
   
 });
@@ -60,7 +49,6 @@ describe('American Express', function() {
 
 describe('Visa', function() {
   var assert = chai.assert;
- 
 
   it('has a prefix of 4 and a length of 13', function() {
     detectNetwork('4123456789012').should.equal('Visa');
@@ -76,40 +64,28 @@ describe('Visa', function() {
 });
 
 describe('MasterCard', function() {
-
   var should = chai.should();
-  it('has a prefix 51 and a length of 16', function() {
-    detectNetwork('5112345678901234').should.equal('MasterCard');
-  });
- 
-  it('has a prefix 52 and a length of 16', function() {
-    detectNetwork('5212345678901234').should.equal('MasterCard');
-  });
- 
-  it('has a prefix 53 and a length of 16', function() {
-    detectNetwork('5312345678901234').should.equal('MasterCard');
-  });
-  
-  it('has a prefix of 54 and a length of 16', function() {
-    detectNetwork('5412345678901234').should.equal('MasterCard');
-  });
- 
-  it('has a prefix of 55 and a length of 16', function() {
-    detectNetwork('5512345678901234').should.equal('MasterCard');
-  })
- 
+  var card_numbers = [5112345678901234, 5212345678901234, 5312345678901234, 5412345678901234, 5512345678901234];
+
+  for (var prefix = 51; prefix <= 55; prefix++) {
+    (function (pfix, card_num) {
+      it('has a prefix '+ pfix +' and a length of 16', function() {
+        detectNetwork(card_num.toString()).should.equal('MasterCard');
+      });
+    })(prefix, card_numbers[(prefix % 10) - 1]);
+
+  }
 });
 
 describe('Discover', function() {
-
-  var prefixes = [6011, 65, 644649];
+  var prefixes = ['6011', '65', '644', '645', '646', '647', '648', '649'];
   var lengths = [16, 19];
-  var card_number_seed = [6011678234561234, 6520678234561234, 6446498234561234];
+  var card_number_seed = ['6011678234561234', '6520678234561234', '6446498234561234', '6456498234561234', '6466498234561234', '6476498234561234', '6486498234561234', '6496498234561234'];
   
   // for every prefix
   for (var p = 0; p < prefixes.length; p++ ) {
     // for every length
-      for (var length_index = 0; length_index < lengths.length; length_index++) {
+    for (var length_index = 0; length_index < lengths.length; length_index++) {
 
     (function(prefix, card_num){
       
@@ -122,9 +98,8 @@ describe('Discover', function() {
        
       // use right cardnumber for right prefix
       it('has a prefix of '+ prefix +' and a length of '+ lengths[length_index], function() {
-        detectNetwork(card_num.toString() + toAdd).should.equal('Discover');
+        detectNetwork(card_num + toAdd).should.equal('Discover');
       });
-      
 
     })(prefixes[p], card_number_seed[p]);
     }
@@ -159,5 +134,75 @@ describe('Maestro', function() {
 
 });
 
-describe('should support China UnionPay')
-describe('should support Switch')
+describe('China UnionPay', function() {
+  // China UnionPay : prefix - 622126-622925, 624-626, or 6282-6288,    length - 16-19
+  var prefixes = [];
+  // populate prefixes
+  for (var i = 622126; i <= 622925; i++) {
+    prefixes.push(i.toString());
+  }
+  for (var i = 624; i <= 626; i++) {
+    prefixes.push(i.toString());
+  }
+  for (var i = 6282; i <= 6288; i++) {
+    prefixes.push(i.toString());
+  }
+
+  var card_number_seed = [];
+  // populating card_number_seed for length 16
+  for (var i = 622126; i <= 622925; i++) {
+    card_number_seed.push(i.toString() + '1234567899');
+  }
+  for (var i = 624; i <= 626; i++) {
+    card_number_seed.push(i.toString() + '1234567899876');
+  }
+  for (var i = 6282; i <= 6288; i++) {
+    card_number_seed.push(i.toString() + '123456789987');
+  }
+
+  // for every prefix
+  for (var i = 0; i < prefixes.length; i++) {
+    for (var length = 16; length <= 19; length++) {
+      (function(prefix, card_num) {
+        // string to concatenate to increase length of cardnumber
+        var toAddLength = length - 16;
+        var toAdd = '';
+        for ( var i = 0; i < toAddLength; i++) {
+          toAdd += '1';
+        }
+
+        // test statement
+        it('has a prefix of '+ prefix +' and a length of '+ length, function() {
+          detectNetwork(card_num + toAdd).should.equal('China UnionPay');
+        });
+
+      })(prefixes[i], card_number_seed[i]);
+    }
+  } 
+});
+
+describe('Switch', function() {
+  var prefixes = ['4903', '4905', '4911', '4936', '564182', '633110', '6333', '6759'];
+  var card_number_seed = ['4903987654321234', '4905987654321234', '4911987654321234', '4936987654321234', '5641827654321234', '6331107654321234', '6333827654321234', '6759827654321234']
+  var lengths = [16, 18, 19];
+  
+  for (var i = 0; i < prefixes.length; i++) {
+    for (var length_index = 0; length_index <= 2; length_index++) {
+      (function(prefix, card_num) {
+        // string to concatenate to increase length of cardnumber
+        var toAddLength = lengths[length_index] - 16;
+        var toAdd = '';
+        for ( var i = 0; i < toAddLength; i++) {
+          toAdd += '1';
+        }
+
+        // test statement
+        it('has a prefix of '+ prefix +' and a length of '+ lengths[length_index], function() {
+          detectNetwork(card_num + toAdd).should.equal('Switch');
+        });
+
+      })(prefixes[i], card_number_seed[i]);
+    }
+  }
+});
+
